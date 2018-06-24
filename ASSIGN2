@@ -1,0 +1,74 @@
+//KC03GC1A JOB ,'ALQAISI',MSGCLASS=H                                    00010000
+//*                                                                     00020000
+//**********************************************                        00021000
+//*                                                                     00022000
+//* CSCI 465/565  FALL 2017                                             00030000
+//*                                                                     00040000
+//* ASSIGNMENT 2  JCL AND PROGRAM FETCH                                 00050000
+//*                                                                     00060000
+//* PROGRAMMER:  ZUBAIDAH ALQAISI                                       00070000
+//*                                                                     00080000
+//* DUE DATE:  09/15/2017                                               00090000
+//* DUE TIME:  11:59 PM                                                 00100000
+//*                                                                     00110000
+//* THE PURPOSE OF THIS JOB IS TO PRACTICE PROGRAM                      00111013
+//* FETCH OR WHAT WE REFER TO AS "FETCHING" BY FETCHING                 00112013
+//* A PROGRAM MODULE FROM AN EXISTING LOAD LIBRARY.                     00112113
+//*                                                                     00114013
+//**********************************************                        00120000
+//*                                                                     00130000
+//JOBLIB   DD DSN=KC02322.CSCI465.LOADLIB,DISP=SHR                      00131011
+//*                                                                     00132003
+//JSTEP01  EXEC PGM=READDATA                                            00140001
+//*                                                                     00141009
+//**************************************************                    00142013
+//* JSTEP01 FETCH AND EXECUTE A LOAD MODULE NAMED                       00143013
+//* READDATA STORED IN KC02322.CSCI465.DATAFA17(DATA2)                  00144014
+//* LOAD LIBRARY.                                                       00145014
+//*                                                                     00146013
+//* DDNAME              FILE DESCRIPTION                                00147013
+//*                                                                     00148013
+//* JOBLIB INPUT: TELL THE SYSTEM WHERE TO FIND THE LOAD                00149013
+//*               MODULE TO BE EXECUTED.                                00149113
+//* RECSIN1 INPUT: READ IN FROM 80 BYTES RECORDS STORED                 00149213
+//*                IN DATA2 MEMBER.                                     00149313
+//*                                                                     00149413
+//* RECSOUT1 OUTPUT: ALLOCATING A TEMPORARY DATA SET                    00149513
+//*                  IN TRACKS AND PASS IT TO THE NEXT JOB.             00149614
+//* SYSUDUMP OUTPUT: PROVIDE A LARGE DUMP TO THE STORAGE                00149714
+//*                  AND THE REGISTERS. STANDERED OUTPUT.               00149814
+//*                                                                     00149914
+//****************************************************                  00150013
+//*                                                                     00150113
+//RECSIN1  DD DSN=KC02322.CSCI465.DATAFA17(DATA2),DISP=SHR              00151011
+//*                                                                     00160011
+//RECSOUT1 DD DSN=&&TEMP1,SPACE=(TRK,(1,1)),DISP=(NEW,PASS,DELETE)      00170011
+//*                                                                     00171011
+//SYSUDUMP DD SYSOUT=*                                                  00190013
+//*                                                                     00200009
+//JSTEP02  EXEC PGM=RPTDATA,COND=(0,LT)                                 00210012
+//*                                                                     00211009
+//**********************************************                        00212013
+//* JSTEP02 FETCH AND EXECUTE A LOAD MODULE NAMED                       00213013
+//* RPTDATA STORED IN KC02322.CSCI465.DATAFA17(DATA2)                   00214014
+//* LOAD LIBRARY.                                                       00215014
+//*                                                                     00216013
+//* DDNAME              FILE DESCRIPTION                                00217014
+//*                                                                     00218014
+//* RECSIN2 INPUT: READING IN THE SOURCE CODE STORED                    00219014
+//*                IN TEMPORARY DATA SET PASSED FROM                    00219114
+//*                JSTEP01.                                             00219214
+//*                                                                     00219314
+//* RECSOUT2 OUTPUT: USED FOR OUTPUT THE CONTENT OF                     00219414
+//*                  THE TEMPORARY DATA SET.                            00219514
+//* SYSUDUMP OUTPUT: PROVIDES A LARGE DUMP OFSTORAGE                    00219614
+//*                  AND REGISTER. STANDARD OUTPUT.                     00219714
+//*                                                                     00219814
+//*************************************************                     00219914
+//*                                                                     00220014
+//RECSIN2  DD DSN=&&TEMP1,DISP=(MOD,DELETE,DELETE)                      00221011
+//*                                                                     00230011
+//RECSOUT2 DD SYSOUT=*                                                  00240011
+//*                                                                     00260009
+//SYSUDUMP DD SYSOUT=*                                                  00270013
+//                                                                      00280009
